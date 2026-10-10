@@ -1,0 +1,75 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Caso Ambar — o jogo do SQL{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'jogo/css/style.css' %}">
+</head>
+<body>
+<header class="topo">
+  <div class="marca">
+    <span class="insignia">7D</span>
+    <div>
+      <strong>CASO AMBAR</strong>
+      <small>Delegacia do 7º Distrito · Detetive Ícaro Bastos</small>
+    </div>
+  </div>
+  <nav>
+    <a href="{% url 'jogo:delegacia' %}" class="{% if request.resolver_match.url_name == 'delegacia' %}ativo{% endif %}">Delegacia</a>
+    <a href="{% url 'jogo:cena' %}" class="{% if request.resolver_match.url_name == 'cena' %}ativo{% endif %}">Cena do crime</a>
+  </nav>
+  <div class="progresso" title="Pistas descobertas">
+    <div class="barra"><span style="width: {{ progresso }}%"></span></div>
+    <small>{{ descobertas|length }}/{{ total_pistas }} pistas</small>
+  </div>
+</header>
+<main>
+{% block content %}{% endblock %}
+</main>
+<div id="terminal" class="terminal-oculto" aria-hidden="true">
+  <div class="terminal-caixa">
+    <div class="terminal-topo">
+      <span class="luz"></span>
+      <strong>TERMINAL DE CONSULTAS — BASE DO INQUÉRITO</strong>
+      <button type="button" id="terminal-fechar" title="Fechar (Esc)">✕</button>
+    </div>
+    <div class="terminal-corpo">
+      <div class="terminal-editor">
+        <label for="sql">Digite sua consulta (Ctrl+Enter para executar):</label>
+        <textarea id="sql" spellcheck="false" rows="5" placeholder="SELECT * FROM evidencias;"></textarea>
+        <div class="terminal-acoes">
+          <button type="button" id="sql-executar" class="btn-primario">Executar</button>
+          <span class="atalho">Ctrl+Enter</span>
+        </div>
+        <div id="sql-erro" class="erro-oculto"></div>
+        <div id="sql-info" class="info-oculto"></div>
+        <div id="sql-resultados"></div>
+      </div>
+      <aside class="terminal-lateral">
+        <h3>Caderno de pistas</h3>
+        <ol id="lista-pistas"></ol>
+        <h3>Esquema do banco</h3>
+        <div id="esquema"></div>
+        <h3>Últimas consultas</h3>
+        <ul id="historico"></ul>
+      </aside>
+    </div>
+  </div>
+</div>
+<div id="aviso" class="aviso-oculto"></div>
+<script>
+  window.JOGO = {
+    urlQuery: "{% url 'jogo:api_query' %}",
+    urlPistas: "{% url 'jogo:api_pistas' %}",
+    urlDica: "{% url 'jogo:api_dica' %}",
+    urlAcusacao: "{% url 'jogo:api_acusacao' %}",
+    urlReset: "{% url 'jogo:api_reset' %}",
+    csrf: "{{ csrf_token }}",
+    schema: {{ schema_json|safe }}
+  };
+</script>
+<script src="{% static 'jogo/js/terminal.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,255 @@
+{% extends "jogo/base.html" %}
+{% load static %}
+{% block title %}Delegacia — Caso Ambar{% endblock %}
+{% block content %}
+<section class="cena">
+  <div class="cena-cabecalho">
+    <h1>Delegacia do 7º Distrito — sala do detetive</h1>
+    <p>Clique no <strong>computador</strong> para consultar o banco do caso, no <strong>telefone</strong> para pedir uma dica e na <strong>porta</strong> para registrar a acusação.</p>
+  </div>
+
+  <div class="cena-quadro">
+    <svg viewBox="0 0 1200 700" class="cena-svg" role="img" aria-label="Sala do detetive com computador">
+      <defs>
+        <linearGradient id="parede2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#151c28"/><stop offset="100%" stop-color="#0b0f16"/>
+        </linearGradient>
+        <radialGradient id="monitor-brilho" cx="50%" cy="45%" r="55%">
+          <stop offset="0%" stop-color="#39d353" stop-opacity=".28"/>
+          <stop offset="100%" stop-color="#39d353" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="chao2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a2130"/><stop offset="100%" stop-color="#0c1017"/>
+        </linearGradient>
+      </defs>
+
+      <rect width="1200" height="700" fill="url(#parede2)"/>
+      <rect y="480" width="1200" height="220" fill="url(#chao2)"/>
+
+      <!-- quadro de avisos / pistas -->
+      <g class="hotspot" data-acao="prancheta">
+        <rect x="70" y="110" width="260" height="200" rx="6" fill="#3c2b1c" stroke="#6b4f31" stroke-width="6"/>
+        <rect x="95" y="135" width="100" height="70" fill="#dfe6f0" transform="rotate(-3 95 135)"/>
+        <rect x="215" y="130" width="95" height="80" fill="#c7d1e0" transform="rotate(2 215 130)"/>
+        <rect x="105" y="225" width="120" height="65" fill="#e6ecf5" transform="rotate(1 105 225)"/>
+        <rect x="240" y="230" width="70" height="60" fill="#dfe6f0" transform="rotate(-2 240 230)"/>
+        <line x1="100" y1="130" x2="300" y2="290" stroke="#ff7b72" stroke-width="3" opacity=".8"/>
+        <rect x="60" y="100" width="280" height="220" fill="transparent" class="hotspot-alvo"/>
+        <text x="200" y="340" class="hotspot-rotulo" text-anchor="middle">CADERNO DE PISTAS</text>
+      </g>
+
+      <!-- janela noturna -->
+      <g>
+        <rect x="880" y="90" width="240" height="180" rx="4" fill="#0a1422" stroke="#2c3a52" stroke-width="6"/>
+        <line x1="1000" y1="90" x2="1000" y2="270" stroke="#2c3a52" stroke-width="6"/>
+        <circle cx="1070" cy="140" r="18" fill="#e8eef7" opacity=".75"/>
+        <rect x="905" y="200" width="40" height="70" fill="#1d2a3d"/>
+        <rect x="960" y="180" width="50" height="90" fill="#1d2a3d"/>
+        <rect x="1030" y="195" width="45" height="75" fill="#1d2a3d"/>
+      </g>
+
+      <!-- porta (acusacao) -->
+      <g class="hotspot" data-acao="porta">
+        <rect x="1030" y="330" width="130" height="300" fill="#2f2418" stroke="#5b452c" stroke-width="6"/>
+        <circle cx="1050" cy="480" r="7" fill="#f0b429"/>
+        <rect x="1055" y="360" width="80" height="60" fill="#1a2130" opacity=".8"/>
+        <text x="1095" y="395" text-anchor="middle" fill="#8fa3c0" font-size="13" font-family="monospace">SAÍDA</text>
+        <rect x="1015" y="320" width="160" height="320" fill="transparent" class="hotspot-alvo"/>
+        <text x="1095" y="660" class="hotspot-rotulo" text-anchor="middle">ACUSAR</text>
+      </g>
+
+      <!-- mesa -->
+      <rect x="330" y="470" width="620" height="26" rx="4" fill="#5a3d24"/>
+      <rect x="350" y="496" width="580" height="130" fill="#4a3120"/>
+
+      <!-- PC com tela de SQL -->
+      <g class="hotspot" data-acao="pc">
+        <ellipse cx="640" cy="430" rx="220" ry="120" fill="url(#monitor-brilho)"/>
+        <rect x="470" y="180" width="340" height="230" rx="12" fill="#1b2331" stroke="#4a5a76" stroke-width="6"/>
+        <rect x="492" y="200" width="296" height="190" rx="6" fill="#07130a"/>
+        <g font-family="monospace" font-size="15" fill="#39d353">
+          <text x="508" y="228">BASE DO INQUERITO — somente leitura</text>
+          <text x="508" y="254">sqlite&gt; SELECT * FROM</text>
+          <text x="508" y="280">         evidencias;</text>
+          <text x="508" y="306">  id | tipo     | descricao</text>
+          <text x="508" y="332">   1 | laudo    | obito as 22:14...</text>
+          <text x="508" y="358">   3 | documento| apolice 180000</text>
+          <text x="508" y="384">sqlite&gt; _</text>
+        </g>
+        <rect x="600" y="410" width="80" height="30" fill="#2a3446"/>
+        <rect x="530" y="440" width="220" height="16" rx="6" fill="#3a465c"/>
+        <rect x="450" y="160" width="380" height="300" fill="transparent" class="hotspot-alvo"/>
+        <text x="640" y="170" class="hotspot-rotulo" text-anchor="middle">TERMINAL SQL</text>
+      </g>
+
+      <!-- telefone -->
+      <g class="hotspot" data-acao="telefone">
+        <rect x="800" y="420" width="110" height="50" rx="10" fill="#2a3446" stroke="#54647f" stroke-width="3"/>
+        <rect x="812" y="404" width="86" height="20" rx="10" fill="#3a465c"/>
+        <circle cx="855" cy="445" r="12" fill="#0d1117"/>
+        <rect x="780" y="390" width="150" height="90" fill="transparent" class="hotspot-alvo"/>
+        <text x="855" y="500" class="hotspot-rotulo" text-anchor="middle">DICA DO ESCRIVÃO</text>
+      </g>
+
+      <!-- xicara -->
+      <g>
+        <rect x="380" y="440" width="46" height="34" rx="4" fill="#dfe6f0"/>
+        <path d="M426 448 h16 a10 10 0 0 1 0 20 h-16" fill="none" stroke="#dfe6f0" stroke-width="5"/>
+        <path d="M392 428 c 6 -12, -6 -18, 0 -30 M410 428 c 6 -12, -6 -18, 0 -30" stroke="#8fa3c0" stroke-width="3" fill="none" opacity=".7"/>
+      </g>
+
+      <!-- cadeira / silhueta do detetive de costas -->
+      <g opacity=".95">
+        <path d="M170 700 C 160 600, 175 540, 250 540 C 325 540, 340 600, 330 700 Z" fill="#111823"/>
+        <circle cx="250" cy="515" r="32" fill="#111823"/>
+        <path d="M208 500 h84 l-10 -20 h-64 z" fill="#111823"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="narracao" id="narracao">
+    <h2>Sala do detetive</h2>
+    <p>O inquérito do <strong>Caso Ambar</strong> está aberto. Helena Vilar, galerista, morta às 22:14 de sexta-feira. Cinco suspeitos, nenhuma testemunha útil — e um banco de dados com tudo o que a investigação apurou.</p>
+    <p class="dica-resumo">{% if finalizou %}<strong class="ok">Todas as pistas foram apuradas. Hora de registrar a acusação.</strong>{% elif proxima_pista %}<strong>Próxima missão:</strong> {{ proxima_pista.briefing }}{% endif %}</p>
+    <div class="botoes">
+      <button type="button" class="btn-primario" data-abrir-terminal>Abrir terminal SQL</button>
+      <button type="button" id="btn-acusacao" class="btn-perigo {% if not finalizou %}btn-desabilitado{% endif %}" {% if not finalizou %}disabled{% endif %}>Registrar acusação</button>
+    </div>
+  </div>
+
+  <div id="modal-acusacao" class="modal-oculto">
+    <div class="modal-caixa">
+      <h2>Auto de acusação</h2>
+      <p>Aponte o culpado, a prova decisiva e o motivo. Sem todas as três, o juiz arquiva o caso.</p>
+      <label>Culpado
+        <select id="ac-culpado">
+          {% for s in suspeitos %}<option value="{{ s.id }}">{{ s.nome }}</option>{% endfor %}
+        </select>
+      </label>
+      <label>Prova decisiva
+        <select id="ac-prova">
+          {% for p in provas %}<option value="{{ p.id }}">{{ p.texto }}</option>{% endfor %}
+        </select>
+      </label>
+      <label>Motivo
+        <select id="ac-motivo">
+          {% for m in motivos %}<option value="{{ m.id }}">{{ m.texto }}</option>{% endfor %}
+        </select>
+      </label>
+      <div class="botoes">
+        <button type="button" id="ac-enviar" class="btn-perigo">Assinar e apresentar</button>
+        <button type="button" id="ac-fechar" class="btn-fantasma">Cancelar</button>
+      </div>
+      <p id="ac-resultado"></p>
+
+      <div id="ac-etapa2" class="oculto">
+        <hr>
+        <h2 class="titulo-alerta">Confirmação final — não tem volta</h2>
+        <p class="texto-erro">
+          Ao confirmar, o inquérito do <strong>Caso Ambar</strong> é encerrado na hora:
+          todas as pistas apuradas são apagadas e o caso vai direto para o desfecho —
+          <strong>prisão ou fuga</strong>. Você não poderá voltar a investigar este caso.
+        </p>
+        <p class="resumo-acusacao" id="ac-resumo"></p>
+        <div class="botoes">
+          <button type="button" id="ac-confirmar" class="btn-perigo">Sim, encerrar o caso (sem volta)</button>
+          <button type="button" id="ac-voltar" class="btn-fantasma">Voltar, quero rever as provas</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  const narracao = document.getElementById('narracao');
+  const acoes = {
+    pc: function () { window.abrirTerminal(); },
+    prancheta: function () { window.abrirTerminal(); },
+    telefone: function () { pedirDica(); },
+    porta: function () { abrirAcusacao(); }
+  };
+  document.addEventListener('click', function (ev) {
+    const alvo = ev.target.closest('[data-acao]');
+    if (!alvo) return;
+    const fn = acoes[alvo.getAttribute('data-acao')];
+    if (fn) fn();
+  });
+
+  function falar(titulo, texto, cls) {
+    narracao.innerHTML = '<h2>' + titulo + '</h2><p class="' + (cls || '') + '">' + texto + '</p>' +
+      '<div class="botoes"><button type="button" class="btn-primario" data-abrir-terminal>Abrir terminal SQL</button></div>';
+  }
+
+  function pedirDica() {
+    fetch(JOGO.urlDica, {headers: {'Accept': 'application/json'}})
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        falar('Dica do escrivão — pista ' + d.pista, d.dica, 'texto-dica');
+      });
+  }
+
+  const modal = document.getElementById('modal-acusacao');
+  const btnAcusar = document.getElementById('btn-acusacao');
+  function abrirAcusacao() {
+    if (btnAcusar.disabled) {
+      falar('Acusação precipitada', 'Faltam pistas no caderno. Sem a cadeia completa de provas a denuncia nao sobrevive a uma audiencia. Continue consultando o banco.', 'texto-erro');
+      return;
+    }
+    modal.classList.remove('modal-oculto');
+    modal.classList.add('modal-visivel');
+  }
+  if (btnAcusar) btnAcusar.addEventListener('click', abrirAcusacao);
+  document.getElementById('ac-fechar').addEventListener('click', function () {
+    modal.classList.remove('modal-visivel');
+    modal.classList.add('modal-oculto');
+    document.getElementById('ac-etapa2').classList.add('oculto');
+    document.getElementById('ac-resultado').textContent = '';
+  });
+  document.getElementById('ac-enviar').addEventListener('click', function () {
+    const saida = document.getElementById('ac-resultado');
+    saida.textContent = '';
+    const culpado = document.getElementById('ac-culpado');
+    const prova = document.getElementById('ac-prova');
+    const motivo = document.getElementById('ac-motivo');
+    document.getElementById('ac-resumo').innerHTML =
+      'Culpado: <strong>' + culpado.options[culpado.selectedIndex].text + '</strong><br>' +
+      'Prova: <strong>' + prova.options[prova.selectedIndex].text + '</strong><br>' +
+      'Motivo: <strong>' + motivo.options[motivo.selectedIndex].text + '</strong>';
+    document.getElementById('ac-etapa2').classList.remove('oculto');
+    document.getElementById('ac-confirmar').focus();
+  });
+
+  document.getElementById('ac-voltar').addEventListener('click', function () {
+    document.getElementById('ac-etapa2').classList.add('oculto');
+  });
+
+  document.getElementById('ac-confirmar').addEventListener('click', function () {
+    const dados = {
+      pessoa_id: document.getElementById('ac-culpado').value,
+      prova: document.getElementById('ac-prova').value,
+      motivo: document.getElementById('ac-motivo').value,
+      confirmado: true
+    };
+    fetch(JOGO.urlAcusacao, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-CSRFToken': JOGO.csrf},
+      body: JSON.stringify(dados)
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d.redirecionar) {
+          window.location = d.redirecionar;
+          return;
+        }
+        document.getElementById('ac-etapa2').classList.add('oculto');
+        const saida = document.getElementById('ac-resultado');
+        saida.textContent = d.texto || d.erro;
+        saida.className = 'texto-erro';
+      });
+  });
+})();
+</script>
+{% endblock %}

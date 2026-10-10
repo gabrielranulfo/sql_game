@@ -1,0 +1,17 @@
+# Ambiente
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Banco do jogo (regenerado com `python manage.py seed_caso`)
+db.sqlite3
+caso/*.db
+caso/*.db-journal
+
+# Logs e temporarios
+*.log
+.DS_Store
+.idea/
+.vscode/

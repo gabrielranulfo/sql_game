@@ -1,0 +1,109 @@
+{% extends "jogo/base.html" %}
+{% block title %}Caso encerrado — Caso Ambar{% endblock %}
+{% block content %}
+<section class="fim">
+  <div class="fim-quadro {% if veredicto.venceu %}fim-vitoria{% else %}fim-derrota{% endif %}">
+    <svg viewBox="0 0 1200 340" class="fim-svg" role="img"
+         aria-label="{% if veredicto.venceu %}Prisao do culpado{% else %}Suspeito foge{% endif %}">
+      <defs>
+        <linearGradient id="ceu" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0a1119"/><stop offset="100%" stop-color="#141c2a"/>
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="340" fill="url(#ceu)"/>
+      <rect y="260" width="1200" height="80" fill="#0d1219"/>
+      <line y1="260" x2="1200" y2="260" stroke="#2b3648" stroke-width="3"/>
+
+      {% if veredicto.venceu %}
+      <!-- viatura + algemas -->
+      <g>
+        <rect x="90" y="180" width="330" height="70" rx="14" fill="#1c2634" stroke="#3d4f6b" stroke-width="4"/>
+        <rect x="150" y="140" width="180" height="50" rx="10" fill="#1c2634" stroke="#3d4f6b" stroke-width="4"/>
+        <rect x="165" y="150" width="60" height="34" fill="#58a6ff" opacity=".35"/>
+        <rect x="240" y="150" width="60" height="34" fill="#58a6ff" opacity=".35"/>
+        <rect x="205" y="128" width="40" height="14" rx="6" fill="#ff4d4d"/>
+        <circle cx="225" cy="135" r="26" fill="#ff4d4d" opacity=".25"/>
+        <circle cx="165" cy="252" r="30" fill="#05080d" stroke="#3d4f6b" stroke-width="6"/>
+        <circle cx="350" cy="252" r="30" fill="#05080d" stroke="#3d4f6b" stroke-width="6"/>
+        <text x="300" y="222" fill="#8fa3c0" font-size="17" font-family="monospace">POLICIA 7D</text>
+      </g>
+      <g>
+        <!-- detetive -->
+        <path d="M560 260 C 552 205, 560 175, 590 175 C 620 175, 628 205, 620 260 Z" fill="#16202e"/>
+        <circle cx="590" cy="158" r="20" fill="#16202e"/>
+        <path d="M562 148 h56 l-7 -14 h-42 z" fill="#16202e"/>
+        <!-- preso algemado -->
+        <path d="M700 260 C 692 210, 700 182, 730 182 C 760 182, 768 210, 760 260 Z" fill="#2a1d1d"/>
+        <circle cx="730" cy="165" r="20" fill="#2a1d1d"/>
+        <g stroke="#c7d1e0" stroke-width="5" fill="none">
+          <circle cx="678" cy="222" r="15"/><circle cx="710" cy="222" r="15"/>
+        </g>
+        <line x1="640" y1="230" x2="672" y2="226" stroke="#16202e" stroke-width="10" stroke-linecap="round"/>
+        <line x1="755" y1="230" x2="722" y2="226" stroke="#2a1d1d" stroke-width="10" stroke-linecap="round"/>
+      </g>
+      <text x="900" y="180" fill="#39d353" font-size="34" font-family="monospace">CULPADO PRESO</text>
+      <text x="900" y="218" fill="#8fa3c0" font-size="17" font-family="monospace">OMICIDIO HELENA VILAR</text>
+      {% else %}
+      <!-- fuga: estrada, carro, aviao -->
+      <g>
+        <rect x="80" y="195" width="300" height="60" rx="14" fill="#241a1a" stroke="#6b3d3d" stroke-width="4"/>
+        <rect x="140" y="160" width="160" height="45" rx="10" fill="#241a1a" stroke="#6b3d3d" stroke-width="4"/>
+        <circle cx="150" cy="255" r="27" fill="#05080d" stroke="#6b3d3d" stroke-width="6"/>
+        <circle cx="315" cy="255" r="27" fill="#05080d" stroke="#6b3d3d" stroke-width="6"/>
+        <g stroke="#ff7b72" stroke-width="4" opacity=".7">
+          <line x1="400" y1="220" x2="470" y2="220"/><line x1="390" y1="245" x2="445" y2="245"/>
+        </g>
+      </g>
+      <g fill="#8fa3c0" opacity=".9">
+        <path d="M760 120 l120 -28 l-18 34 l60 14 l-16 16 l-70 -10 l-30 30 l-16 -14 l14 -30 l-70 -6 z"/>
+      </g>
+      <g>
+        <rect x="920" y="150" width="180" height="70" rx="6" fill="none" stroke="#ff7b72" stroke-width="6"/>
+        <text x="1010" y="196" fill="#ff7b72" font-size="30" font-family="monospace" text-anchor="middle">SOLTO</text>
+      </g>
+      <text x="560" y="300" fill="#ff7b72" font-size="26" font-family="monospace">CASO ARQUIVADO</text>
+      {% endif %}
+    </svg>
+
+    <div class="fim-texto">
+      <p class="fim-selo {% if veredicto.venceu %}selo-verde{% else %}selo-vermelho{% endif %}">
+        {% if veredicto.venceu %}CASO ENCERRADO — PRISÃO DECRETADA{% else %}CASO ENCERRADO — SUSPEITO FUGIU{% endif %}
+      </p>
+      <h1>{% if veredicto.venceu %}O culpado está preso{% else %}O caso virou pó{% endif %}</h1>
+      <p class="fim-lead">{{ veredicto.texto }}</p>
+
+      <ul class="fim-pecas">
+        <li><span>Acusado</span><strong>{{ veredicto.acusado }}</strong></li>
+        <li><span>Prova decisiva</span><strong>{{ veredicto.prova }}</strong></li>
+        <li><span>Motivo</span><strong>{{ veredicto.motivo }}</strong></li>
+        <li><span>Provas conferidas</span><strong>{{ veredicto.acertos }}/3</strong></li>
+      </ul>
+
+      <p class="fim-nota">
+        O inquérito foi encerrado e <strong>todas as pistas foram zeradas</strong>:
+        a sala do detetive está pronta para um novo caso.
+      </p>
+
+      <div class="botoes">
+        <button type="button" id="btn-novo-caso" class="btn-primario">Abrir novo inquérito (0/6 pistas)</button>
+        <a class="btn-fantasma" href="{% url 'jogo:cena' %}">Rever a cena do crime</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  document.getElementById('btn-novo-caso').addEventListener('click', function () {
+    fetch(JOGO.urlReset, {
+      method: 'POST',
+      headers: {'X-CSRFToken': JOGO.csrf}
+    })
+      .then(function (r) { return r.json(); })
+      .then(function () { window.location = '{% url "jogo:delegacia" %}'; });
+  });
+})();
+</script>
+{% endblock %}
