@@ -133,6 +133,34 @@ sql_game/
 | POST | `/api/acusacao/` | `{pessoa_id, prova, motivo, confirmado}` |
 | POST | `/api/reset/` | zera a sessão |
 
+## Publicando no Render
+
+`config/settings.py` já trata o domínio do Render (`ALLOWED_HOSTS` inclui
+`RENDER_EXTERNAL_HOSTNAME` e `.onrender.com`), o `CSRF` para HTTPS
+(`https://*.onrender.com`), `DEBUG` automático em produção e os arquivos
+estáticos via **WhiteNoise**.
+
+No serviço **Web** do Render (Python 3.14):
+
+| Campo | Valor |
+|-------|-------|
+| Build Command | `pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput` |
+| Start Command | `gunicorn config.wsgi:application` |
+
+Variáveis de ambiente opcionais:
+
+| Variável | Padrão | Para quê |
+|----------|--------|----------|
+| `SECRET_KEY` | chave de desenvolvimento | troque em produção |
+| `ALLOWED_HOSTS` | `*.onrender.com` (+domínio do serviço) | domínios extra, separados por vírgula |
+| `CSRF_TRUSTED_ORIGINS` | `https://*.onrender.com` | origens extra de POST |
+| `DEBUG` | `false` no Render | só ligue para depurar |
+| `DB_PATH` | `db.sqlite3` | caminho do SQLite de sessão (em disco efêmero no plano free) |
+| `CASO_DB` | `caso/caso.db` | caminho do banco do inquérito (recriado no boot se faltar) |
+
+> O banco do caso (`caso/caso.db`) é regerado automaticamente na largada;
+> `python manage.py seed_caso` força a recriação.
+
 ## Licença
 
 MIT — livre para estudar, jogar e modificar.

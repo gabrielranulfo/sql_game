@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-r%pdswc7xd=+_t7&2t7@(5i3aevzf(xv*aenxg(nfdp=!pg0$n'
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure-r%pdswc7xd=+_t7&2t7@(5i3aevzf(xv*aenxg(nfdp=!pg0$n",
+)
+
+# Producao (Render define RENDER=1) x desenvolvimento local.
+EM_PRODUCAO = bool(os.environ.get("RENDER"))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "false" if EM_PRODUCAO else "true").lower() in ("1", "true", "yes")
 
-ALLOWED_HOSTS = []
+# Hosts: variavel ALLOWED_HOSTS (separada por virgula), dominio do Render,
+# localhost e qualquer *.onrender.com.
+HOSTS = [h.strip() for h in os.environ.get("ALLOWED_HOSTS", "").split(",") if h.strip()]
+if os.environ.get("RENDER_EXTERNAL_HOSTNAME"):
+    HOSTS.append(os.environ["RENDER_EXTERNAL_HOSTNAME"])
+ALLOWED_HOSTS = HOSTS + ["localhost", "127.0.0.1", ".onrender.com"]
+
+# POST/PUT precisam originar do proprio dominio em HTTPS.
+CSRF_TRUSTED_ORIGINS = ["https://*.onrender.com"] + [
+    o.strip() for o in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()
+]
 
 
 # Application definition
@@ -42,6 +59,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,7 +94,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': Path(os.environ.get('DB_PATH', str(BASE_DIR / 'db.sqlite3'))),
     }
 }
 
@@ -117,8 +135,14 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'jogo' / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-CASO_DB = BASE_DIR / 'caso' / 'caso.db'
+STORAGES = {
+    'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+    'staticfiles': {'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage'},
+}
+
+CASO_DB = Path(os.environ.get('CASO_DB', str(BASE_DIR / 'caso' / 'caso.db')))
 
 
 # Email
