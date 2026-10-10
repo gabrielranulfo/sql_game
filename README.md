@@ -140,12 +140,18 @@ sql_game/
 (`https://*.onrender.com`), `DEBUG` automático em produção e os arquivos
 estáticos via **WhiteNoise**.
 
-No serviço **Web** do Render (Python 3.14):
+No serviço **Web** do Render (Python 3.14) — ou usando o `render.yaml` da raiz
+(Blueprints):
 
 | Campo | Valor |
 |-------|-------|
 | Build Command | `pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput` |
-| Start Command | `gunicorn config.wsgi:application` |
+| Start Command | `python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT` |
+
+> O start command **precisa** escutar em `0.0.0.0:$PORT`: o default do Render
+> (`python manage.py runserver 8989`) sobe só em 127.0.0.1 e o serviço fica
+> com *"No open ports detected"* (HTTP 503). O `collectstatic` no start
+> garante a pasta `staticfiles/` (senão o WhiteNoise avisa e o CSS dá 404).
 
 Variáveis de ambiente opcionais:
 
